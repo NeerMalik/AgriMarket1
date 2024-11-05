@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AgriMarket</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        /* General Styles */
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+            background-color: #f4f4f4;
+            color: #333;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        /* Dark Theme */
+        body.dark {
+            background-color: #121212;
+            color: #e0e0e0;
+        }
+
+        /* Navigation Bar Styles */
+        nav {
+            background: #4CAF50;
+            color: #fff;
+            padding: 1rem;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        nav ul {
+            list-style: none;
+            display: flex;
+            justify-content: space-around;
+            padding: 0;
+            margin: 0;
+        }
+
+        nav a {
+            color: #fff;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 1rem;
+            transition: color 0.3s;
+        }
+
+        nav a:hover {
+            color: #cce8c1;
+        }
+
+        /* Section Styles */
+        .section {
+            padding: 2rem;
+            margin: 1rem auto;
+            max-width: 800px;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            transition: box-shadow 0.3s;
+        }
+
+        .section:hover {
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        body.dark .section {
+            background: #1e1e1e;
+            color: #e0e0e0;
+        }
+
+        h1, h2 {
+            color: #4CAF50;
+            margin-bottom: 0.5rem;
+        }
+
+        body.dark h1, body.dark h2 {
+            color: #a5d6a7;
+        }
+
+        /* Search Bar Styles */
+        #searchBar {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1rem;
+            margin: 1rem 0;
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+
+        #searchBar:focus {
+            outline: none;
+            border-color: #4CAF50;
+            box-shadow: 0 0 5px rgba(76, 175, 80, 0.5);
+        }
+
+        body.dark #searchBar {
+            background-color: #333;
+            border-color: #555;
+            color: #e0e0e0;
+        }
+
+        /* Table Styles */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+            font-size: 0.9rem;
+        }
+
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        body.dark th {
+            background-color: #333;
+        }
+
+        /* Form Styles */
+        .add-price-form, .registration-form, #contactForm {
+            display: flex;
+            flex-direction: column;
+            margin: 1rem auto;
+            padding: 1.5rem;
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            max-width: 400px;
+        }
+
+        .add-price-form input, .registration-form input, #contactForm input, #contactForm textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            margin-bottom: 1rem;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+
+        .add-price-form input:focus, .registration-form input:focus, #contactForm input:focus, #contactForm textarea:focus {
+            outline: none;
+            border-color: #4CAF50;
+            box-shadow: 0 0 5px rgba(76, 175, 80, 0.5);
+        }
+
+        .add-price-form button, .registration-form button, #contactForm button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background 0.3s;
+        }
+
+        .add-price-form button:hover, .registration-form button:hover, #contactForm button:hover {
+            background-color: #45a049;
+        }
+
+        body.dark .add-price-form, body.dark .registration-form, body.dark #contactForm {
+            background-color: #222;
+        }
+
+        body.dark .add-price-form input, body.dark .registration-form input, body.dark #contactForm input, body.dark #contactForm textarea {
+            background-color: #333;
+            color: #e0e0e0;
+            border-color: #555;
+        }
+
+        /* Theme Toggle Button */
+        .theme-toggle {
+            cursor: pointer;
+            margin: 1rem auto;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            background-color: #4CAF50;
+            color: white;
+            font-size: 1rem;
+            font-weight: bold;
+            transition: background 0.3s, transform 0.2s;
+            display: block;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+
+        .theme-toggle:hover {
+            background-color: #45a049;
+            transform: scale(1.05);
+        }
+
+        /* Back to Top Button */
+        #backToTop {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            display: none;
+            padding: 8px 12px;
+            background: #4CAF50;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: background 0.3s;
+        }
+
+        /* Button Container */
+        .button-container {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 1rem;
+        }
+
+        /* Chart Container */
+        .chart-container {
+            position: relative;
+            height: 300px;
+            width: 90%;
+            margin: 2rem auto;
+            padding: 1rem;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Edit and Delete Buttons */
+        .edit-button, .delete-button {
+            background-color: #ff9800;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-left: 5px;
+        }
+
+        .edit-button:hover {
+            background-color: #fb8c00;
+        }
+
+        .delete-button {
+            background-color: #f44336;
+        }
+
+        .delete-button:hover {
+            background-color: #e53935;
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <ul>
+            <li><a href="#home">Home</a></li>
+            <li><a href="#prices">Prices</a></li>
+            <li><a href="#registration">Register</a></li>
+            <li><a href="#contact">Contact</a></li>
+        </ul>
+    </nav>
+
+    <div class="section" id="home">
+        <h1>Welcome to AgriMarket</h1>
+        <p>Your one-stop destination for all agricultural market needs.</p>
+        <button class="theme-toggle">Toggle Dark Mode</button>
+    </div>
+
+    <div class="section" id="prices">
+        <h2>Current Prices</h2>
+        <input type="text" id="searchBar" placeholder="Search crops..." oninput="filterPrices()">
+        <div class="chart-container">
+            <canvas id="myChart"></canvas>
+        </div>
+        <div class="add-price-form">
+            <input type="text" id="cropName" placeholder="Crop Name" required>
+            <input type="number" id="cropPrice" placeholder="Crop Price" required>
+            <button id="addPriceButton">Add Price</button>
+        </div>
+        <table id="pricesTable">
+            <thead>
+                <tr>
+                    <th>Crop Name</th>
+                    <th>Price</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Dynamic rows will be added here -->
+            </tbody>
+        </table>
+    </div>
+
+    <div class="section" id="registration">
+        <h2>Registration</h2>
+        <form class="registration-form" id="registrationForm">
+            <input type="text" id="username" placeholder="Username" required>
+            <input type="email" id="email" placeholder="Email" required>
+            <input type="password" id="password" placeholder="Password" required>
+            <button type="submit">Register</button>
+        </form>
+    </div>
+
+    <div class="section" id="contact">
+        <h2>Contact Us</h2>
+        <form id="contactForm">
+            <input type="text" id="contactName" placeholder="Your Name" required>
+            <input type="email" id="contactEmail" placeholder="Your Email" required>
+            <textarea id="contactMessage" placeholder="Your Message" required></textarea>
+            <button type="submit">Send Message</button>
+        </form>
+    </div>
+
+    <button id="backToTop">Back to Top</button>
+
+    <script>
+        // Chart.js Setup
+        const ctx = document.getElementById('myChart').getContext('2d');
+        const myChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: [], // Crop names will be dynamically added
+                datasets: [{
+                    label: 'Crop Prices',
+                    data: [], // Prices will be dynamically added
+                    backgroundColor: 'rgba(76, 175, 80, 0.6)',
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+
+        const users = new Set(); // Store registered usernames
+
+        // Add Price Button Event
+        document.getElementById('addPriceButton').addEventListener('click', function() {
+            const cropName = document.getElementById('cropName').value;
+            const cropPrice = document.getElementById('cropPrice').value;
+
+            if (cropName && cropPrice) {
+                // Add to Table
+                const table = document.getElementById('pricesTable').getElementsByTagName('tbody')[0];
+                const newRow = table.insertRow();
+                newRow.innerHTML = `<td>${cropName}</td><td>${cropPrice}</td><td><button class="edit-button">Edit</button><button class="delete-button">Delete</button></td>`;
+                
+                // Update Chart
+                myChart.data.labels.push(cropName);
+                myChart.data.datasets[0].data.push(cropPrice);
+                myChart.update();
+
+                // Reset input fields
+                document.getElementById('cropName').value = '';
+                document.getElementById('cropPrice').value = '';
+            }
+        });
+
+        // Filter Prices Function
+        function filterPrices() {
+            const searchTerm = document.getElementById('searchBar').value.toLowerCase();
+            const tableRows = document.querySelectorAll('#pricesTable tbody tr');
+
+            tableRows.forEach(row => {
+                const cropName = row.cells[0].textContent.toLowerCase();
+                row.style.display = cropName.includes(searchTerm) ? '' : 'none';
+            });
+        }
+
+        // Edit and Delete Functionality
+        document.getElementById('pricesTable').addEventListener('click', function(e) {
+            if (e.target.classList.contains('edit-button')) {
+                const row = e.target.closest('tr');
+                const cropName = row.cells[0].innerText;
+                const cropPrice = row.cells[1].innerText;
+
+                document.getElementById('cropName').value = cropName;
+                document.getElementById('cropPrice').value = cropPrice;
+
+                // Remove the row from the table and chart
+                row.remove();
+                myChart.data.labels.splice(myChart.data.labels.indexOf(cropName), 1);
+                myChart.data.datasets[0].data.splice(myChart.data.datasets[0].data.indexOf(cropPrice), 1);
+                myChart.update();
+            }
+
+            if (e.target.classList.contains('delete-button')) {
+                const row = e.target.closest('tr');
+                const cropName = row.cells[0].innerText;
+
+                // Remove the row from the table and chart
+                row.remove();
+                myChart.data.labels.splice(myChart.data.labels.indexOf(cropName), 1);
+                myChart.data.datasets[0].data.splice(myChart.data.datasets[0].data.indexOf(row.cells[1].innerText), 1);
+                myChart.update();
+            }
+        });
+
+        // Registration Form Submission
+        document.getElementById('registrationForm').addEventListener('submit', function(e) {
+            e.preventDefault(); // Prevent the default form submission
+            const username = document.getElementById('username').value;
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+
+            if (users.has(username)) {
+                alert('Username already taken. Please choose a different one.');
+                return;
+            }
+
+            users.add(username);
+            alert(`Registered Successfully!\n\nUsername: ${username}\nEmail: ${email}`);
+            this.reset();
+        });
+
+        // Contact Form Submission
+        document.getElementById('contactForm').addEventListener('submit', function(e) {
+            e.preventDefault(); // Prevent the default form submission
+            const name = document.getElementById('contactName').value;
+            const email = document.getElementById('contactEmail').value;
+            const message = document.getElementById('contactMessage').value;
+            if (name && email && message) {
+                alert(`Message sent successfully!\n\nName: ${name}\nEmail: ${email}\nMessage: ${message}`);
+                this.reset();
+            } else {
+                alert("Please fill in all fields.");
+            }
+        });
+
+        // Theme Toggle
+        document.querySelector('.theme-toggle').addEventListener('click', function() {
+            document.body.classList.toggle('dark');
+        });
+
+        // Back to Top Button
+        const backToTopButton = document.getElementById('backToTop');
+        window.onscroll = function() {
+            if (document.body.scrollTop > 100 || document.documentElement.scrollTop > 100) {
+                backToTopButton.style.display = "block";
+            } else {
+                backToTopButton.style.display = "none";
+            }
+        };
+        backToTopButton.addEventListener('click', function() {
+            window.scrollTo({top: 0, behavior: 'smooth'});
+        });
+    </script>
+</body>
+</html>
